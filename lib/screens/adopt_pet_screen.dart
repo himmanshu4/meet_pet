@@ -99,7 +99,8 @@ class _AdoptPetScreenState extends State<AdoptPetScreen> {
       return Column(
         children: [
           for (var pet in widget.petList) ...[
-            if (category == 'All' || category.toLowerCase() == (pet.type + "s"))
+            if (category == 'All' ||
+                category.toLowerCase() == (pet.type + "s").toUpperCase())
               landscapePetCard(pet, widget.cUser, context),
           ]
         ],
