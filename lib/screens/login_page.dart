@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void gotoHome() {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (_) => const HomePage()));
+        .pushReplacement(MaterialPageRoute(builder: (_) => const HomePage()));
   }
 
   @override

@@ -111,7 +111,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   void gotoHome() {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (_) => const HomePage()));
+        .pushReplacement(MaterialPageRoute(builder: (_) => const HomePage()));
   }
 
   Container navigationButtons(String but1, String but2) {

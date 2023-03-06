@@ -27,41 +27,41 @@ Future<void> main() async {
   } else {
     await Firebase.initializeApp();
   }
-  ErrorWidget.builder = (FlutterErrorDetails details) => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          body: Container(
-            color: secondary,
-            child: Center(
-              child: Column(
-                children: [
-                  Flexible(
-                    child: Container(),
-                    flex: 10,
-                  ),
-                  Image.asset(
-                    'assets/images/logo.png',
-                    color: primary,
-                    height: 100,
-                    width: 100,
-                  ),
-                  Flexible(
-                    child: Container(),
-                    flex: 1,
-                  ),
-                  CircularProgressIndicator(
-                    color: primary,
-                  ),
-                  Flexible(
-                    child: Container(),
-                    flex: 10,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
+  // ErrorWidget.builder = (FlutterErrorDetails details) => MaterialApp(
+  //       debugShowCheckedModeBanner: false,
+  //       home: Scaffold(
+  //         body: Container(
+  //           color: secondary,
+  //           child: Center(
+  //             child: Column(
+  //               children: [
+  //                 Flexible(
+  //                   child: Container(),
+  //                   flex: 10,
+  //                 ),
+  //                 Image.asset(
+  //                   'assets/images/logo.png',
+  //                   color: primary,
+  //                   height: 100,
+  //                   width: 100,
+  //                 ),
+  //                 Flexible(
+  //                   child: Container(),
+  //                   flex: 1,
+  //                 ),
+  //                 CircularProgressIndicator(
+  //                   color: primary,
+  //                 ),
+  //                 Flexible(
+  //                   child: Container(),
+  //                   flex: 10,
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     );
   runApp(const MyApp());
 }
 
