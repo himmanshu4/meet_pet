@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../models/address.dart';
 import 'storage_methods.dart';
@@ -64,7 +65,7 @@ class AuthMethods {
           userName: userName,
           firstName: firstName,
           lastName: lastName,
-          dob: dob ,
+          dob: dob,
           emailId: email,
           contactNo: contactNumber.toString(),
           uid: cred.user!.uid,
@@ -119,5 +120,32 @@ class AuthMethods {
 
   Future<void> signOut() async {
     await _auth.signOut();
+  }
+
+  Future<String> loginWithGoogle() async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    final GoogleSignInAccount? googleSignInAccount =
+        await googleSignIn.signIn();
+    if (googleSignInAccount != null) {
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount.authentication;
+      final AuthCredential authCredential = GoogleAuthProvider.credential(
+          idToken: googleSignInAuthentication.idToken,
+          accessToken: googleSignInAuthentication.accessToken);
+
+      // Getting users credential
+      UserCredential result = await _auth.signInWithCredential(authCredential);
+      User? user = result.user;
+
+      if (result != null) {
+        return 'success';
+        // Navigator.pushReplacement(
+        //     context, MaterialPageRoute(builder: (context) => HomePage()));
+      }
+
+      // if result not null we simply call the MaterialpageRoute,
+      // for go to the HomePage screen
+    }
+    return "fails";
   }
 }

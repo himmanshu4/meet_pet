@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
       password: _passwordTextController.text,
     );
 
-    if (res == 'success') {
+    if (res == 'success' || res=='Success') {
       gotoHome();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(showCustomSnackBar(
@@ -47,6 +47,23 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _isLoading = false;
     });
+  }
+
+  loginUserWithGoogleAuth() async {
+    print("loginng ");
+    // setState(() {
+    //   _isLoading = true;
+    // });
+    String res = await AuthMethods().loginWithGoogle();
+    if (res == 'success') {
+      gotoHome();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(showCustomSnackBar(
+          "Oh Snap!", res, pink, CupertinoIcons.exclamationmark_circle));
+    }
+    // setState(() {
+    //   _isLoading = false;
+    // });
   }
 
   void gotoHome() {
@@ -194,6 +211,7 @@ class _LoginPageState extends State<LoginPage> {
                         BoxDecoration(borderRadius: BorderRadius.circular(90)),
                     child: ElevatedButton(
                       onPressed: () {
+                        loginUserWithGoogleAuth();
                         // loginUserDb(context, _emailTextController,
                         // _passwordTextController);
                       },
