@@ -49,6 +49,23 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  loginUserWithGoogleAuth() async {
+    print("loginng ");
+    // setState(() {
+    //   _isLoading = true;
+    // });
+    String res = await AuthMethods().loginWithGoogle();
+    if (res == 'success') {
+      gotoHome();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(showCustomSnackBar(
+          "Oh Snap!", res, pink, CupertinoIcons.exclamationmark_circle));
+    }
+    // setState(() {
+    //   _isLoading = false;
+    // });
+  }
+
   void gotoHome() {
     Navigator.of(context)
         .pushReplacement(MaterialPageRoute(builder: (_) => const HomePage()));
@@ -194,6 +211,7 @@ class _LoginPageState extends State<LoginPage> {
                         BoxDecoration(borderRadius: BorderRadius.circular(90)),
                     child: ElevatedButton(
                       onPressed: () {
+                        loginUserWithGoogleAuth();
                         // loginUserDb(context, _emailTextController,
                         // _passwordTextController);
                       },
