@@ -138,7 +138,7 @@ class AuthMethods {
       User? user = result.user;
 
       if (result != null) {
-        return 'Success';
+        return 'success';
         // Navigator.pushReplacement(
         //     context, MaterialPageRoute(builder: (context) => HomePage()));
       }

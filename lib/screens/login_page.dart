@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
       password: _passwordTextController.text,
     );
 
-    if (res == 'success') {
+    if (res == 'success' || res=='Success') {
       gotoHome();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(showCustomSnackBar(
