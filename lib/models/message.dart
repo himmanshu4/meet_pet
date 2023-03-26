@@ -25,19 +25,30 @@ class Message {
       SnapshotOptions? snapshotOptions) {
     final data = snapshot.data()!;
     return Message(
-        message: data["message"]!,
-        timestamp: data["timestamp"]!,
-        senderID: data["senderID"]!,
-        receiverID: data["receiverID"]!,
-        messageType: data["messageType"]!);
+      message: data["message"]!,
+      timestamp: (data["timestamp"]! as Timestamp).toDate(),
+      senderID: data["senderID"]!,
+      receiverID: data["receiverID"]!,
+      messageType: MessageType.values[data["messageType"]!],
+    );
   }
+  static Message fromMap(Map<String, dynamic> data) {
+    return Message(
+      message: data["message"]!,
+      timestamp: data["timestamp"]!,
+      senderID: data["senderID"]!,
+      receiverID: data["receiverID"]!,
+      messageType: MessageType.values[data["messageType"]!],
+    );
+  }
+
   Map<String, dynamic> toFireStore() {
     return {
-      'messageType': messageType,
+      'messageType': messageType.index,
       'message': message,
       'senderID': senderID,
       'receiverID': receiverID,
-      'timestamp': timestamp,
+      'timestamp': timestamp ,
     };
   }
 }

@@ -20,23 +20,53 @@ class ChatMethods {
     return ref.putFile(file);
   }
 
-  sendMessage(Message message, String currentUserId) {
+  sendMessage(Message message) {
     var token = message.token;
     return firestore
         .collection("chats")
         .doc(token)
-        .collection(token)
-        .doc(randomString() + message.senderID)
+        .collection("messages")
+        .doc(randomString()+message.senderID)
         .set(message.toFireStore());
   }
 
-  Stream<QuerySnapshot> getChatStream(String token, int limit) {
+  sendImage({
+    required String path,
+    required String senderID,
+    required String receiverID,
+  }) async {
+    var task = uploadFile(
+      file: File(path),
+      fileName: ChatMethods.randomString(),
+    );
+    var snapshot = await task;
+    var downloadURL = await snapshot.ref.getDownloadURL();
+    task.whenComplete(() {
+      sendMessage(Message(
+          senderID: senderID,
+          receiverID: receiverID,
+          timestamp: DateTime.now(),
+          message: downloadURL,
+          messageType: MessageType.image));
+    });
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getMessageStream(String token) {
+    return firestore
+        .collection("chats")
+        .doc(token)
+        .collection("messages")
+        .orderBy("timestamp")
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> getChatListStream(
+      String uid1, List<String> friendList, int limit) {
     return firestore
         .collection('chats')
-        .doc(token)
-        .collection(token)
-        .orderBy("timestamp", descending: true)
-        .limit(limit)
+        .where("token",
+            whereIn: friendList.map((e) => getToken(uid1, e)).toList())
+        .orderBy("lastMessage", descending: true)
         .snapshots();
   }
 
@@ -55,14 +85,28 @@ class ChatMethods {
     return DateTime.now().microsecondsSinceEpoch.toString();
   }
 
-  void makeFriends(String uid1, String uid2) async {
-    var token = getToken(uid1, uid2);
-    print("adding friend");
-    var user1 = firestore.collection('users').doc(uid1);
-    var user2 = firestore.collection('users').doc(uid2);
-    firestore.collection('users').doc(uid1).collection("friends").doc(uid2).set({}).onError((error, stackTrace) {
-      print(error);
+  sendFriendRequest(String uid1, String uid2) {
+    final u1ref = firestore.collection("users").doc(uid1);
+    final u2ref = firestore.collection("users").doc(uid2);
+    final data = {"time": DateTime.now()};
+    return firestore.runTransaction((transaction) async {
+      transaction.set(u1ref.collection("sentRequests").doc(uid2), data);
+      transaction.set(u2ref.collection("receivedRequests").doc(uid1), data);
     });
-    user2.collection('friends').doc(uid1).set({"friends":1});
+  }
+
+  acceptFriendRequest(String uid1, String uid2) {
+    final token = getToken(uid1, uid2);
+    final u1ref = firestore.collection("users").doc(uid1);
+    final u2ref = firestore.collection("users").doc(uid2);
+    return firestore.runTransaction((transaction) async {
+      transaction.set(firestore.collection("chatroom").doc(token), {});
+      transaction.delete(u1ref.collection('receivedRequests').doc(uid2));
+      transaction.delete(u2ref.collection('sentRequests').doc(uid1));
+      transaction
+          .set(u1ref.collection('friends').doc(uid2), {"time": DateTime.now()});
+      transaction
+          .set(u2ref.collection('friends').doc(uid1), {"time": DateTime.now()});
+    });
   }
 }
