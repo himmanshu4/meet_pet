@@ -33,12 +33,12 @@ class _MenuScreenState extends State<MenuScreen> {
 
   // int _menuItemSelected = 1;
   Widget menuOption(int index, IconData icon, String optionName) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         widget.setIndex(index);
       },
       child: Container(
-        padding: EdgeInsets.only(top: 10, bottom: 10),
+        padding: EdgeInsets.only(top: 15, bottom: 15),
         child: Row(
           children: [
             Icon(
@@ -106,7 +106,8 @@ class _MenuScreenState extends State<MenuScreen> {
             menuOption(2, Icons.add, "Add Pet"),
             menuOption(3, Icons.favorite, "Favorites"),
             menuOption(4, Icons.notifications, "Notifications"),
-            menuOption(5, Icons.person, "Profile"),
+            menuOption(5, Icons.chat, "Chats"),
+            menuOption(6, Icons.person, "Profile"),
             Flexible(
               flex: 1,
               child: Container(),

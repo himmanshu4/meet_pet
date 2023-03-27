@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:meet_pet/models/address.dart';
+import 'package:meet_pet/screens/chat_screen.dart';
 import 'package:meet_pet/screens/favorite_pets.dart';
 import 'package:provider/provider.dart';
 
@@ -32,7 +34,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _menuItemSelected = 1;
-
+  late Position currLocation;
   bool _isLoading = true;
   var userData = {};
   var petListdb = [];
@@ -62,7 +64,7 @@ class _HomePageState extends State<HomePage> {
 
       // get post lENGTH
       var petForAdoptionSnap = await FirebaseFirestore.instance
-          .collection('pets')
+          .collection('petsforAdoption')
           .where('oldOwnerUID',
               isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .get();
@@ -70,7 +72,7 @@ class _HomePageState extends State<HomePage> {
       userData = userSnap.data()!;
 
       QuerySnapshot<Map<String, dynamic>> petSnap =
-          await FirebaseFirestore.instance.collection('pets').get();
+          await FirebaseFirestore.instance.collection('petsforAdoption').get();
       petListdb = petSnap.docs;
 
       for (var pet in petListdb) {
@@ -87,8 +89,7 @@ class _HomePageState extends State<HomePage> {
           type: pet["type"],
           datePosted: pet["datePosted"].toDate(), //problem
           address: Address(
-            addLine1: pet["address"]["addLine1"],
-            addLine2: pet["address"]["addLine2"],
+            location: pet["address"]['location'],
             city: pet["address"]["city"],
             state: pet["address"]["state"],
             country: pet["address"]["country"],
@@ -109,6 +110,26 @@ class _HomePageState extends State<HomePage> {
     });
     // print(userData);
   }
+
+  findDistance(double startLatitude, double startLongitude, double endLatitude,
+      double endLongitude) {
+    double dis = Geolocator.distanceBetween(
+      startLatitude,
+      startLongitude,
+      endLatitude,
+      endLongitude,
+    );
+    return dis;
+  }
+
+  getLocation() async {
+    currLocation = await Geolocator.getCurrentPosition();
+  }
+
+  //  getLocation() async {
+  //   Position curr = await Geolocator.getCurrentPosition();
+  //   return curr;
+  // }
 
   Widget currentScreen(model.User cUser, List<Pet> petList) {
     if (menuItemSelected == 1) {
@@ -136,6 +157,10 @@ class _HomePageState extends State<HomePage> {
         cUser: cUser,
       );
     } else if (menuItemSelected == 5) {
+      return ChatScreen(
+        // cUser: cUser,
+      );
+    } else if (menuItemSelected == 6) {
       return UserProfile(
         cUser: cUser,
       );
@@ -148,10 +173,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    getLocation();
     model.User cUser = model.User(
       address: Address(
-        addLine1: userData['address']['addLine1'], //works
-        addLine2: userData['address']['addLine2'], //works
+        location: userData['address']['location'],
         city: userData['address']['city'], //works
         country: userData['address']['country'], //works
         state: userData['address']['state'], //works
@@ -162,6 +187,7 @@ class _HomePageState extends State<HomePage> {
       uid: userData['uid'],
       firstName: userData['firstName'],
       lastName: userData['lastName'],
+
       dob: userData['dob'].toDate(),
       emailId: userData['emailId'],
       profileImg: userData['profileImg'],
@@ -172,6 +198,18 @@ class _HomePageState extends State<HomePage> {
       petsAdopted: userData['petsAdopted'],
       // petsAdopted: [],
     );
+
+    for (var pet in petList) {
+      pet.distance = findDistance(currLocation.latitude, currLocation.longitude,
+          pet.address.location.latitude, pet.address.location.longitude);
+      // pet.distance = findDistance(
+      //     cUser.address.location.latitude,
+      //     cUser.address.location.longitude,
+      //     pet.address.location.latitude,
+      //     pet.address.location.longitude);
+    }
+    petList.sort((p1, p2) => p1.distance.compareTo(p2.distance));
+
     setState(() {
       _isLoading = false;
     });

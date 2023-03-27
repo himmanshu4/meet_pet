@@ -28,8 +28,7 @@ class AuthMethods {
     required String lastName,
     required DateTime dob,
     required String contactNumber,
-    required String addLine1,
-    required String addLine2,
+    required GeoPoint location,
     required String city,
     required String state,
     required String country,
@@ -47,8 +46,6 @@ class AuthMethods {
           dob != DateTime.now() &&
           (int.parse(contactNumber) > 1000000000 &&
               int.parse(contactNumber) <= 9999999999) &&
-          addLine1.isNotEmpty &&
-          addLine2.isNotEmpty &&
           city.isNotEmpty &&
           state.isNotEmpty &&
           country.isNotEmpty &&
@@ -72,8 +69,7 @@ class AuthMethods {
           profileImg: profilePicUrl,
           backCoverImg: backCoverPicUrl,
           address: Address(
-            addLine1: addLine1,
-            addLine2: addLine2,
+            location: location,
             city: city,
             state: state,
             country: country,

@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:meet_pet/screens/forgot_password.dart';
 import 'package:meet_pet/widgets/show_snackbar.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../resources/auth_methods.dart';
 import '../utils/colors.dart';
@@ -20,6 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordTextController = TextEditingController();
   final TextEditingController _emailTextController = TextEditingController();
   bool _isLoading = false;
+  late Position _userLocation;
 
   @override
   dispose() {
@@ -38,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
       password: _passwordTextController.text,
     );
 
-    if (res == 'success' || res=='Success') {
+    if (res == 'success' || res == 'Success') {
       gotoHome();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(showCustomSnackBar(
@@ -65,6 +69,30 @@ class _LoginPageState extends State<LoginPage> {
     //   _isLoading = false;
     // });
   }
+
+  // updateLocation() async {
+  //   print("i am trying");
+  //   Position location = await Geolocator.getCurrentPosition();
+
+  //   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  //   var userSnap = await FirebaseFirestore.instance
+  //       .collection('locationcheck')
+  //       .doc('demo')
+  //       .get();
+
+  //   var location1 = userSnap['location'];
+
+  //   double distance = await Geolocator.distanceBetween(location.latitude,
+  //       location.longitude, location1.latitude, location1.longitude);
+
+  //   ScaffoldMessenger.of(context).showSnackBar(showCustomSnackBar(
+  //       "Oh Snap!",
+  //       ((distance / 1000).round()).toString() + "km",
+  //       pink,
+  //       CupertinoIcons.exclamationmark_circle));
+  //   // late GeoPoint ll =
+  //   print(location.toString());
+  // }
 
   void gotoHome() {
     Navigator.of(context)
@@ -143,6 +171,8 @@ class _LoginPageState extends State<LoginPage> {
                         BoxDecoration(borderRadius: BorderRadius.circular(90)),
                     child: ElevatedButton(
                       onPressed: () => loginUser(),
+                      // onPressed: () => updateLocation(),
+
                       style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.resolveWith((states) {

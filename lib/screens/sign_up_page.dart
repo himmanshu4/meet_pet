@@ -1,12 +1,17 @@
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meet_pet/screens/home_page.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../resources/auth_methods.dart';
 import '../utils/colors.dart';
+import '../widgets/show_snackbar.dart';
 import '../widgets/text_field_ui.dart';
 import 'login_page.dart';
 
@@ -30,8 +35,7 @@ class _SignUpPageState extends State<SignUpPage> {
       TextEditingController();
   final TextEditingController _lastNameTextController = TextEditingController();
   final TextEditingController _userNameTextController = TextEditingController();
-  final TextEditingController _addLine1TextController = TextEditingController();
-  final TextEditingController _addLine2TextController = TextEditingController();
+
   final TextEditingController _cityTextController = TextEditingController();
   final TextEditingController _stateTextController = TextEditingController();
   final TextEditingController _countryTextController = TextEditingController();
@@ -39,6 +43,7 @@ class _SignUpPageState extends State<SignUpPage> {
   DateTime birthDate = DateTime.now();
   Uint8List? _profilePicImage;
   Uint8List? _backCoverPicImage;
+  late Position _userLocation;
 
   @override
   dispose() {
@@ -48,8 +53,6 @@ class _SignUpPageState extends State<SignUpPage> {
     _contactNumberTextController.dispose();
     _firstNameTextController.dispose();
     _lastNameTextController.dispose();
-    _addLine1TextController.dispose();
-    _addLine2TextController.dispose();
     _cityTextController.dispose();
     _stateTextController.dispose();
     _countryTextController.dispose();
@@ -71,10 +74,27 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
+  getLocation() async {
+    var status = await Permission.location.status;
+    if (status.isGranted) {
+    } else if (status.isDenied) {
+      Map<Permission, PermissionStatus> status = await [
+        Permission.location,
+      ].request();
+    }
+
+    if (await Permission.location.isPermanentlyDenied) {
+      openAppSettings();
+    }
+    _userLocation = await Geolocator.getCurrentPosition();
+  }
+
   signUpUser() async {
     setState(() {
       _isLoading = true;
     });
+    await getLocation();
+
     String res = await AuthMethods().signUpUser(
         email: _emailTextController.text,
         password: _passwordTextController.text,
@@ -83,8 +103,7 @@ class _SignUpPageState extends State<SignUpPage> {
         lastName: _lastNameTextController.text,
         contactNumber: _contactNumberTextController.text,
         dob: birthDate,
-        addLine1: _addLine1TextController.text,
-        addLine2: _addLine2TextController.text,
+        location: GeoPoint(_userLocation.latitude, _userLocation.longitude),
         city: _cityTextController.text,
         state: _stateTextController.text,
         country: _countryTextController.text,
@@ -379,20 +398,20 @@ class _SignUpPageState extends State<SignUpPage> {
                   const SizedBox(
                     height: 40,
                   ),
-                  textFieldUi(
-                      'Address Line 1',
-                      FontAwesomeIcons.locationArrow,
-                      false,
-                      _addLine1TextController,
-                      TextInputType.streetAddress),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  textFieldUi('Address Line 2', FontAwesomeIcons.mapPin, false,
-                      _addLine2TextController, TextInputType.name),
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  // textFieldUi(
+                  //     'Address Line 1',
+                  //     FontAwesomeIcons.locationArrow,
+                  //     false,
+                  //     _latitudeTextController,
+                  //     TextInputType.streetAddress),
+                  // const SizedBox(
+                  //   height: 20,
+                  // ),
+                  // textFieldUi('Address Line 2', FontAwesomeIcons.mapPin, false,
+                  //     _longitudeTextController, TextInputType.name),
+                  // const SizedBox(
+                  //   height: 20,
+                  // ),
                   textFieldUi('City', FontAwesomeIcons.city, false,
                       _cityTextController, TextInputType.name),
                   const SizedBox(

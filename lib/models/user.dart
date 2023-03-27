@@ -41,16 +41,15 @@ class User {
     var snapshot = snap.data() as Map<String, dynamic>;
     return User(
         address: Address(
-          addLine1: snapshot['address'],
-          addLine2: snapshot['address'],
-          city: snapshot['address'],
-          state: snapshot['address'],
-          country: snapshot['address'],
-          zipCode: snapshot['address'],
+          location: snapshot['address']['location'],
+          city: snapshot['address']['city'],
+          state: snapshot['address']['state'],
+          country: snapshot['address']['country'],
+          zipCode: snapshot['address']['zipcode'],
         ),
         backCoverImg: snapshot['backCoverImg'],
         contactNo: snapshot['contactNo'],
-        dob: snapshot['dob'],
+        dob: snapshot['dob'].toDate(),
         emailId: snapshot['emailId'],
         favPetList: snapshot['favPetList'],
         firstName: snapshot['firstName'],
@@ -180,8 +179,8 @@ class User {
 
 // User cUser = User(
 //   address: Address(
-//     addLine1: "P-131 Near Shivam Appt",
-//     addLine2: "RajivNagar",
+//     latitude: "P-131 Near Shivam Appt",
+//     longitude: "RajivNagar",
 //     city: "Porbandar",
 //     state: "Gujarat",
 //     country: "India",
@@ -207,7 +206,7 @@ class User {
 //       .doc(FirebaseAuth.instance.currentUser!.uid)
 //       .get();
 //   User cUser = User(
-//       // address: Address(addLine1: userSnap['address'][]),
+//       // address: Address(latitude: userSnap['address'][]),
 //       a
 //   return cUser;
 // }

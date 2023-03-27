@@ -44,6 +44,7 @@ class _FavoritePetScreenState extends State<FavoritePetScreen> {
     setState(() {
       _isLoading = true;
     });
+    print("trying");
     try {
       List<dynamic> petList = (widget.listType == "Favorite Pets")
           ? widget.cUser.favPetList
@@ -51,8 +52,11 @@ class _FavoritePetScreenState extends State<FavoritePetScreen> {
               ? widget.cUser.petsForAdoption
               : widget.cUser.petsAdopted;
       for (var p in petList) {
-        DocumentSnapshot<Map<String, dynamic>> petSnap =
-            await FirebaseFirestore.instance.collection('pets').doc(p).get();
+        DocumentSnapshot<Map<String, dynamic>> petSnap = await FirebaseFirestore
+            .instance
+            .collection('petsforAdoption')
+            .doc(p)
+            .get();
 
         var pet = petSnap.data()!;
         var curPet = Pet(
@@ -68,8 +72,7 @@ class _FavoritePetScreenState extends State<FavoritePetScreen> {
           type: pet["type"],
           datePosted: pet["datePosted"].toDate(), //problem
           address: Address(
-            addLine1: pet["address"]["addLine1"],
-            addLine2: pet["address"]["addLine2"],
+            location: pet['address']['location'],
             city: pet["address"]["city"],
             state: pet["address"]["state"],
             country: pet["address"]["country"],
@@ -85,6 +88,7 @@ class _FavoritePetScreenState extends State<FavoritePetScreen> {
       //   e.toString(),
       // );
     }
+    print("completed");
     setState(() {
       _isLoading = false;
     });
@@ -138,7 +142,8 @@ class _FavoritePetScreenState extends State<FavoritePetScreen> {
     int len = 0;
 
     for (var pet in petList) {
-      if (category == 'All' || category.toLowerCase() == (pet.type + "s")) {
+      if (category == 'All' ||
+          category.toLowerCase() == (pet.type + "s").toLowerCase()) {
         len++;
       }
     }
@@ -159,7 +164,8 @@ class _FavoritePetScreenState extends State<FavoritePetScreen> {
       return Column(
         children: [
           for (var pet in petList) ...[
-            if (category == 'All' || category.toLowerCase() == (pet.type + "s"))
+            if (category == 'All' ||
+                category.toLowerCase() == (pet.type + "s").toLowerCase())
               landscapePetCard(pet, widget.cUser, context),
           ]
         ],
@@ -177,7 +183,7 @@ class _FavoritePetScreenState extends State<FavoritePetScreen> {
           widget.listType,
           // (widget.listType == "favPetList")
           //     ? "Favorite Pets"
-          //     : (widget.listType == "petsForAdoption")
+          //     : (widget.listType == "petsforAdoption")
           //         ? "Pets For Adoption"
           //         : "Pets Adopted",
           style: TextStyle(
@@ -199,9 +205,9 @@ class _FavoritePetScreenState extends State<FavoritePetScreen> {
         shadowColor: Colors.transparent,
       ),
       body: _isLoading
-          ? const Center(
+          ? Center(
               child: CircularProgressIndicator(
-                color: white,
+                color: primary,
               ),
             )
           : Container(

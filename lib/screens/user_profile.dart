@@ -62,8 +62,7 @@ class _UserProfileState extends State<UserProfile> {
           type: pet["type"],
           datePosted: pet["datePosted"].toDate(), //problem
           address: Address(
-            addLine1: pet["address"]["addLine1"],
-            addLine2: pet["address"]["addLine2"],
+            location: pet['address']['location'],
             city: pet["address"]["city"],
             state: pet["address"]["state"],
             country: pet["address"]["country"],
@@ -91,8 +90,7 @@ class _UserProfileState extends State<UserProfile> {
           type: pet["type"],
           datePosted: pet["datePosted"].toDate(), //problem
           address: Address(
-            addLine1: pet["address"]["addLine1"],
-            addLine2: pet["address"]["addLine2"],
+            location: pet["address"]['location'],
             city: pet["address"]["city"],
             state: pet["address"]["state"],
             country: pet["address"]["country"],
@@ -284,14 +282,14 @@ class _UserProfileState extends State<UserProfile> {
                 ),
               ),
               Text(
-                "${widget.cUser.address.addLine1}, ${widget.cUser.address.addLine2},",
+                "${widget.cUser.address.city}, ${widget.cUser.address.state},",
                 textScaleFactor: 1.2,
                 style: TextStyle(
                   color: black,
                 ),
               ),
               Text(
-                "${widget.cUser.address.city}, ${widget.cUser.address.state}, ${widget.cUser.address.country}",
+                "${widget.cUser.address.country}",
                 textScaleFactor: 1,
                 style: TextStyle(
                   color: black,
