@@ -19,12 +19,11 @@ class FireStoreMethods {
     required String gender,
     required List<XFile> imgs,
     // required List<String> imgs,
+    required GeoPoint location,
     required String name,
     required String oldOwner,
     required String oldOwnerUID,
     required String type,
-    required String addLine1,
-    required String addLine2,
     required String city,
     required String state,
     required String country,
@@ -47,8 +46,7 @@ class FireStoreMethods {
 
       Pet pet = Pet(
         address: Address(
-            addLine1: addLine1,
-            addLine2: addLine2,
+            location: location,
             city: city,
             state: state,
             country: country,
@@ -69,10 +67,13 @@ class FireStoreMethods {
       var uploadPetData = pet.toMap();
 
       print(uploadPetData);
-      await _firestore.collection('pets').doc(petId).set(uploadPetData);
+      await _firestore
+          .collection('petsforAdoption')
+          .doc(petId)
+          .set(uploadPetData);
 
       await _firestore.collection('users').doc(oldOwnerUID).update({
-        'petsForAdoption': FieldValue.arrayUnion([petId])
+        'petsforAdoption': FieldValue.arrayUnion([petId])
       });
       res = "success";
     } catch (err) {

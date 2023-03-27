@@ -1,18 +1,18 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:async';
 
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:meet_pet/models/message.dart';
-import 'package:meet_pet/resources/chat_methods.dart';
-import 'package:meet_pet/widgets/chat_bubble.dart';
 
+import '../models/message.dart';
+import '../resources/chat_methods.dart';
+import '../widgets/chat_bubble.dart';
 import '../models/user.dart';
 import '../utils/colors.dart';
 import 'home_page.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
@@ -23,13 +23,13 @@ class ChatScreen extends StatefulWidget {
   ChatScreen({super.key, required this.otherUser, required this.cUser}) {
     token = ChatMethods.getToken(cUser.uid, otherUser["uid"]);
   }
-
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
   bool isSender = true;
+
   bool _isLoading = false;
   final chat_methods = ChatMethods();
   TextEditingController msgController = TextEditingController();
@@ -48,6 +48,7 @@ class _ChatScreenState extends State<ChatScreen> {
         backgroundColor: white,
         title: Text(
           widget.otherUser["firstName"] + " " + widget.otherUser["lastName"],
+
           style: TextStyle(
             color: primary,
           ),
@@ -60,7 +61,9 @@ class _ChatScreenState extends State<ChatScreen> {
             color: primary,
           ),
           onPressed: () {
+
             Navigator.of(context).pop();
+
           },
         ),
         // shadowColor: secondaryLight,
@@ -151,6 +154,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 ],
               ),
             ),
+
     );
   }
 

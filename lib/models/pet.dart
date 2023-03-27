@@ -21,6 +21,7 @@ class Pet {
   String petId;
   String type;
   DateTime datePosted;
+  double distance = 0;
   Address address;
   Pet({
     required this.age,
@@ -163,8 +164,8 @@ class Pet {
 //     oldOwnerUID: '',
 //     datePosted: DateTime.now(),
 //     address: Address(
-//       addLine1: "P-131 Near Shivam Appt",
-//       addLine2: "RajivNagar",
+//       latitude: "P-131 Near Shivam Appt",
+//       longitude: "RajivNagar",
 //       city: "Porbandar",
 //       state: "Gujarat",
 //       country: "India",
@@ -189,8 +190,8 @@ class Pet {
 //     oldOwnerUID: '',
 //     datePosted: DateTime.now(),
 //     address: Address(
-//       addLine1: "P-131 Near Shivam Appt",
-//       addLine2: "RajivNagar",
+//       latitude: "P-131 Near Shivam Appt",
+//       longitude: "RajivNagar",
 //       city: "Porbandar",
 //       state: "Gujarat",
 //       country: "India",
@@ -213,8 +214,8 @@ class Pet {
 //     oldOwnerUID: '',
 //     datePosted: DateTime.now(),
 //     address: Address(
-//       addLine1: "P-131 Near Shivam Appt",
-//       addLine2: "RajivNagar",
+//       latitude: "P-131 Near Shivam Appt",
+//       longitude: "RajivNagar",
 //       city: "Porbandar",
 //       state: "Gujarat",
 //       country: "India",
@@ -237,8 +238,8 @@ class Pet {
 //     oldOwnerUID: '',
 //     datePosted: DateTime.now(),
 //     address: Address(
-//       addLine1: "P-131 Near Shivam Appt",
-//       addLine2: "RajivNagar",
+//       latitude: "P-131 Near Shivam Appt",
+//       longitude: "RajivNagar",
 //       city: "Porbandar",
 //       state: "Gujarat",
 //       country: "India",
@@ -261,8 +262,8 @@ class Pet {
 //     oldOwnerUID: '',
 //     datePosted: DateTime.now(),
 //     address: Address(
-//       addLine1: "P-131 Near Shivam Appt",
-//       addLine2: "RajivNagar",
+//       latitude: "P-131 Near Shivam Appt",
+//       longitude: "RajivNagar",
 //       city: "Porbandar",
 //       state: "Gujarat",
 //       country: "India",

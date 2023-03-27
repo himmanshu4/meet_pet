@@ -1,15 +1,15 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Address {
-  String addLine1;
-  String addLine2;
+  GeoPoint location;
   String city;
   String state;
   String country;
   int zipCode;
   Address({
-    required this.addLine1,
-    required this.addLine2,
+    required this.location,
     required this.city,
     required this.state,
     required this.country,
@@ -17,16 +17,15 @@ class Address {
   });
 
   Address copyWith({
-    String? addLine1,
-    String? addLine2,
+    String? latitude,
+    String? longitude,
     String? city,
     String? state,
     String? country,
     int? zipCode,
   }) {
     return Address(
-      addLine1: addLine1 ?? this.addLine1,
-      addLine2: addLine2 ?? this.addLine2,
+      location: location,
       city: city ?? this.city,
       state: state ?? this.state,
       country: country ?? this.country,
@@ -36,8 +35,7 @@ class Address {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'addLine1': addLine1,
-      'addLine2': addLine2,
+      'location': location,
       'city': city,
       'state': state,
       'country': country,
@@ -47,8 +45,7 @@ class Address {
 
   factory Address.fromMap(Map<String, dynamic> map) {
     return Address(
-      addLine1: map['addLine1'] as String,
-      addLine2: map['addLine2'] as String,
+      location: map['location'] as GeoPoint,
       city: map['city'] as String,
       state: map['state'] as String,
       country: map['country'] as String,
@@ -63,15 +60,14 @@ class Address {
 
   @override
   String toString() {
-    return 'Address(addLine1: $addLine1, addLine2: $addLine2, city: $city, state: $state, country: $country, zipCode: $zipCode)';
+    return 'Address(location: $location, city: $city, state: $state, country: $country, zipCode: $zipCode)';
   }
 
   @override
   bool operator ==(covariant Address other) {
     if (identical(this, other)) return true;
 
-    return other.addLine1 == addLine1 &&
-        other.addLine2 == addLine2 &&
+    return other.location == location &&
         other.city == city &&
         other.state == state &&
         other.country == country &&
@@ -80,8 +76,7 @@ class Address {
 
   @override
   int get hashCode {
-    return addLine1.hashCode ^
-        addLine2.hashCode ^
+    return location.hashCode ^
         city.hashCode ^
         state.hashCode ^
         country.hashCode ^

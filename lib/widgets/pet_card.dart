@@ -85,7 +85,7 @@ Widget landscapePetCard(Pet pet, model.User cUser, BuildContext context) {
                             size: 20,
                           ),
                           Text(
-                            pet.address.city,
+                            (pet.distance / 1000).round().toString() + " km",
                             style: TextStyle(color: black),
                           ),
                         ],

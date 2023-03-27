@@ -100,7 +100,7 @@ class _AdoptPetScreenState extends State<AdoptPetScreen> {
         children: [
           for (var pet in widget.petList) ...[
             if (category == 'All' ||
-                category.toLowerCase() == (pet.type + "s").toUpperCase())
+                category.toLowerCase() == (pet.type + "s").toLowerCase())
               landscapePetCard(pet, widget.cUser, context),
           ]
         ],

@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -46,8 +47,7 @@ class _AddPetState extends State<AddPet> {
     "Male",
     'Female',
   ];
-  TextEditingController _addLine1TextController = TextEditingController();
-  TextEditingController _addLine2TextController = TextEditingController();
+  late GeoPoint location;
   TextEditingController _cityTextController = TextEditingController();
   TextEditingController _stateTextController = TextEditingController();
   TextEditingController _countryTextController = TextEditingController();
@@ -57,10 +57,7 @@ class _AddPetState extends State<AddPet> {
   @override
   void initState() {
     super.initState();
-    _addLine1TextController =
-        TextEditingController(text: widget.cUser.address.addLine1);
-    _addLine2TextController =
-        TextEditingController(text: widget.cUser.address.addLine2);
+
     _cityTextController =
         TextEditingController(text: widget.cUser.address.city);
     _stateTextController =
@@ -69,6 +66,7 @@ class _AddPetState extends State<AddPet> {
         TextEditingController(text: widget.cUser.address.country);
     _zipCodeTextController =
         TextEditingController(text: widget.cUser.address.zipCode.toString());
+    location = widget.cUser.address.location;
   }
 
   @override
@@ -79,8 +77,6 @@ class _AddPetState extends State<AddPet> {
     _descTextController.dispose();
     _nameTextController.dispose();
     _typeTextController.dispose();
-    _addLine1TextController.dispose();
-    _addLine2TextController.dispose();
     _cityTextController.dispose();
     _stateTextController.dispose();
     _countryTextController.dispose();
@@ -101,8 +97,7 @@ class _AddPetState extends State<AddPet> {
       type: _typeTextController.text,
       oldOwner: "${widget.cUser.firstName} ${widget.cUser.lastName}",
       oldOwnerUID: widget.cUser.uid,
-      addLine1: _addLine1TextController.text,
-      addLine2: _addLine2TextController.text,
+      location: location,
       city: _cityTextController.text,
       state: _stateTextController.text,
       country: _countryTextController.text,
@@ -380,30 +375,6 @@ class _AddPetState extends State<AddPet> {
                   ],
                 ),
               ),
-              SizedBox(
-                height: _width * 7,
-              ),
-              Container(
-                padding: EdgeInsets.only(left: _width * 5),
-                child: Text(
-                  "Address Line 1:",
-                  style: TextStyle(color: black),
-                ),
-              ),
-              textFieldUi('Address Line 1', FontAwesomeIcons.locationArrow,
-                  false, _addLine1TextController, TextInputType.streetAddress),
-              SizedBox(
-                height: _width * 7,
-              ),
-              Container(
-                padding: EdgeInsets.only(left: _width * 5),
-                child: Text(
-                  "Address Line 2:",
-                  style: TextStyle(color: black),
-                ),
-              ),
-              textFieldUi('Address Line 2', FontAwesomeIcons.mapPin, false,
-                  _addLine2TextController, TextInputType.name),
               SizedBox(
                 height: _width * 7,
               ),
