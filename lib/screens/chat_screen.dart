@@ -47,7 +47,7 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         backgroundColor: white,
         title: Text(
-          widget.otherUser["firstName"],
+          widget.otherUser["firstName"] + " " + widget.otherUser["lastName"],
           style: TextStyle(
             color: primary,
           ),
@@ -60,14 +60,18 @@ class _ChatScreenState extends State<ChatScreen> {
             color: primary,
           ),
           onPressed: () {
-            zoomDrawerController.toggle!();
+            Navigator.of(context).pop();
           },
         ),
         // shadowColor: secondaryLight,
         shadowColor: Colors.transparent,
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(
+              child: CircularProgressIndicator(
+                color: primary,
+              ),
+            )
           : Container(
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
@@ -124,6 +128,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             padding: const EdgeInsets.only(left: 8.0),
                             child: TextField(
                               controller: msgController,
+                              keyboardType: TextInputType.multiline,
                               decoration: const InputDecoration(
                                 hintText: 'Type a message...',
                                 border: InputBorder.none,

@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../models/user.dart';
@@ -29,13 +30,31 @@ class ChatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Image.network(profileImg),
-      title: Text("$firstName $lastName", maxLines: 1),
-      trailing: (unreads > 0 ? Icon(Icons.mark_unread_chat_alt) : Text("")),
-      onTap: () {
-        onChatTap(context);
-      },
+    return Neumorphic(
+      // padding: const EdgeInsets.only(right: 10),
+      margin: const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
+      style: NeumorphicStyle(
+        shape: NeumorphicShape.concave,
+        surfaceIntensity: .1,
+        color: secondary,
+        shadowLightColor: secondaryLight,
+        shadowDarkColor: secondaryDark,
+        depth: 18,
+      ),
+      child: ListTile(
+        leading: Image.network(profileImg),
+        title: Text(
+          "$firstName $lastName",
+          maxLines: 1,
+          style: TextStyle(color: black),
+        ),
+        trailing: (unreads > 0
+            ? const Icon(Icons.mark_unread_chat_alt)
+            : const Text("")),
+        onTap: () {
+          onChatTap(context);
+        },
+      ),
     );
   }
 }
@@ -145,45 +164,51 @@ class _AllChatsState extends State<AllChats> {
                   ),
                 );
               },
-              icon: const Icon(
-                FontAwesomeIcons.amazonPay,
-                color: Colors.amber,
+              icon: Icon(
+                FontAwesomeIcons.add,
+                color: primary,
               ))
         ],
       ),
       body: (friendList.isEmpty
-          ? Text("No friends")
-          : ListView.builder(
-              itemBuilder: ((context, index) {
-                return FutureBuilder(
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return CircularProgressIndicator();
-                    } else {
-                      var userData = snapshot.data?.data();
-                      return ChatTile(
-                        profileImg: userData!["profileImg"],
-                        firstName: userData["firstName"],
-                        lastName: userData["lastName"],
-                        unreads: 0,
-                        onChatTap: (context) {
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) {
-                              return ChatScreen(
-                                  otherUser: userData, cUser: widget.cUser);
-                            },
-                          ));
-                        },
-                      );
-                    }
-                  },
-                  future: FirebaseFirestore.instance
-                      .collection("users")
-                      .doc(friendList[index])
-                      .get(),
-                );
-              }),
-              itemCount: friendList.length,
+          ? Container(
+              decoration: BoxDecoration(color: secondary),
+              child: const Text("No friends"),
+            )
+          : Container(
+              decoration: BoxDecoration(color: secondary),
+              child: ListView.builder(
+                itemBuilder: ((context, index) {
+                  return FutureBuilder(
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const CircularProgressIndicator();
+                      } else {
+                        var userData = snapshot.data?.data();
+                        return ChatTile(
+                          profileImg: userData!["profileImg"],
+                          firstName: userData["firstName"],
+                          lastName: userData["lastName"],
+                          unreads: 0,
+                          onChatTap: (context) {
+                            Navigator.push(context, MaterialPageRoute(
+                              builder: (context) {
+                                return ChatScreen(
+                                    otherUser: userData, cUser: widget.cUser);
+                              },
+                            ));
+                          },
+                        );
+                      }
+                    },
+                    future: FirebaseFirestore.instance
+                        .collection("users")
+                        .doc(friendList[index])
+                        .get(),
+                  );
+                }),
+                itemCount: friendList.length,
+              ),
             )),
     );
   }

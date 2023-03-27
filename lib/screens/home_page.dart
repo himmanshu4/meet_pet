@@ -88,8 +88,10 @@ class _HomePageState extends State<HomePage> {
           type: pet["type"],
           datePosted: pet["datePosted"].toDate(), //problem
           address: Address(
-            addLine1: pet["address"]["addLine1"],
-            addLine2: pet["address"]["addLine2"],
+            // addLine1: pet["address"]["addLine1"],
+            // addLine2: pet["address"]["addLine2"],
+            addLine1: "dfv",
+            addLine2: "erfvfsrtv",
             city: pet["address"]["city"],
             state: pet["address"]["state"],
             country: pet["address"]["country"],
